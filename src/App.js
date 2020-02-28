@@ -15,7 +15,6 @@ import Login from "./views/Auth/Login";
 import Dashboard from "./views/Dashboard";
 import Posts from "./views/Posts";
 import PostID from "./views/PostID";
-import AddPost from "./views/AddPost";
 
 import Loading from "./components/Loading";
 
@@ -29,8 +28,8 @@ const r_font = "Montserrat";
 // using WebFont to easily access Google fonts
 WebFont.load({
   google: {
-    families: [h_font, r_font]
-  }
+    families: [h_font, r_font],
+  },
 });
 
 const App = () => {
@@ -45,7 +44,6 @@ const App = () => {
       <Route path="/register" component={Register} />
       <PrivateRoute exact path="/posts" component={Posts} />
       <PrivateRoute path="/posts/:id" component={PostID} />
-      <PrivateRoute path="/add_post" component={AddPost} />
     </AppWrapper>
   );
 };

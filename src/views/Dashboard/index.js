@@ -1,84 +1,72 @@
-import React, { useReducer, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
-import { Wrapper, Box, Card, Linkton, Col, Button, theme } from "bushido-strap";
+import {
+  Wrapper,
+  Box,
+  Card,
+  Linkton,
+  Flex,
+  Button,
+  theme,
+} from "bushido-strap";
 
 import { useSelector, useDispatch } from "react-redux";
 
-import { useQuery } from "@apollo/react-hooks";
-import { getUserPostsQuery } from "../../store/queries/getUserPosts";
+import { useQuery, useMutation } from "@apollo/react-hooks";
 
-import { useDeletePost } from "../../store/actions/post/useDeletePost";
+import { getUserPostsQuery } from "./queries/getUserPosts";
 
-// import UserPosts from "./components/UserPosts";
+import { deletePostMutation } from "./queries/deletePost";
+
 import Nav from "../../components/Nav";
+import AddPost from "./components/AddPost";
 
-import { getUser } from "../../store/actions/user/useGetUser";
-
-const initialState = { posts: [] };
-
-export const DELETE_POST = "@delete/userPost";
-
-function reducer(state, action) {
-  switch (action?.type) {
-    case "@get/userPosts":
-      return {
-        posts: action.payload
-      };
-    case DELETE_POST:
-      return {
-        posts: state.posts.filter(post => post.id !== action.payload)
-      };
-    default:
-      throw new Error();
-  }
-}
+import { GET_USER_POSTS, DELETE_POST } from "../../store/types";
 
 export default function Dashboard() {
-  const [state, dispatch] = useReducer(reducer, initialState);
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-  const { posts, isDeleted } = state;
+  const [formStatus, setFormStatus] = useState(false);
 
   const { uid } = useSelector(state => state.firebase.auth);
 
-  const [deletePost, handleDeletePost] = useDeletePost();
+  const { posts } = useSelector(state => state.auth);
+
+  const [deletePost] = useMutation(deletePostMutation);
 
   const { data, loading } = useQuery(getUserPostsQuery, {
     variables: {
-      id: uid
-    }
+      id: uid,
+    },
   });
 
   useEffect(() => {
-    dispatch({ type: "@get/userPosts", payload: data?.user?.posts });
+    dispatch({ type: GET_USER_POSTS, payload: data?.user?.posts });
     console.log(data?.user?.posts);
   }, [dispatch, data]);
 
-  // useEffect(() => {
-  //   dispatch(getUser);
-  // }, [useDispatch]);
-
-  // console.log(deletePost?.response);
+  const handleForm = e => {
+    e.preventDefault();
+    setFormStatus(!formStatus);
+  };
 
   return (
     <Wrapper>
       <Nav />
       <Box h="2rem" />
-      <Col>
+      <Flex drape w="50rem">
         <Card invert stretch>
           <Linkton to="/posts" teal="true" stretch="true">
             View the post feed!
           </Linkton>
-          <Linkton to="/add_post" pink="true" stretch="true">
+          <Button onClick={handleForm} pink="true" stretch="true">
             Add a new post!
-          </Linkton>
+          </Button>
         </Card>
-        {/* <UserPosts
-          posts={posts}
-          loading={loading}
-          dispatch={() => dispatch()}
-        /> */}
-        <Card invert max_w="50vw">
+
+        {formStatus ? <AddPost /> : null}
+
+        <Card invert stretch>
           {loading ? (
             <Card>
               <h6>Loading...</h6>
@@ -107,11 +95,17 @@ export default function Dashboard() {
                     onClick={e => {
                       e.preventDefault();
                       console.log(item.id);
-                      handleDeletePost(item.id);
-                      // dispatch({
-                      //   type: DELETE_POST,
-                      //   payload: item.id
-                      // });
+                      deletePost({
+                        variables: {
+                          id: item.id,
+                        },
+                      }).then(res => {
+                        console.log("DELETE POST RESPONSE", res);
+                        dispatch({
+                          type: DELETE_POST,
+                          payload: res.data.deletePost,
+                        });
+                      });
                     }}
                   >
                     Delete Post
@@ -121,7 +115,7 @@ export default function Dashboard() {
             ))
           )}
         </Card>
-      </Col>
+      </Flex>
     </Wrapper>
   );
 }

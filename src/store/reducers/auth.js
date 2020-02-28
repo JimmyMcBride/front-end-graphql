@@ -1,98 +1,95 @@
+import {
+  GET_USER,
+  REGISTER_SUCCESS,
+  LOGIN_SUCCESS,
+  GOOGLE_REGISTER_SUCCESS,
+  GET_USER_POSTS,
+  ADD_POST,
+  DELETE_POST,
+  GET_POST_FEED,
+} from "../types";
+
 const initialState = {
   loggingIn: false,
   isLoggedIn: false,
   loggingOut: false,
   registering: false,
   isRegistered: false,
-  error: ""
+  user: [],
+  posts: [],
+  post_feed: [],
+  error: "",
 };
 
 export const auth = (state = initialState, action) => {
   switch (action.type) {
-    // login reducer
-    case "LOGIN_START":
-      return {
-        ...state,
-        loggingIn: true,
-        isLoggedIn: false,
-        error: null
-      };
-    case "LOGIN_SUCCESS":
+    case LOGIN_SUCCESS:
       return {
         ...state,
         loggingIn: false,
         isLoggedIn: true,
-        error: null
-      };
-    case "LOGIN_FAILURE":
-      return {
-        ...state,
-        loggingIn: false,
-        isLoggedIn: false,
-        error: "Login failed"
+        error: null,
       };
 
-    // register reducer
-    case "REGISTER_START":
-      return {
-        ...state,
-        registering: true,
-        isRegistered: false,
-        error: ""
-      };
-
-    case "REGISTER_SUCCESS":
+    case REGISTER_SUCCESS:
       return {
         ...state,
         registering: false,
         isRegistered: true,
-        error: ""
+        user: {
+          id: action.payload.register.id,
+          username: action.payload.register.username,
+          email: action.payload.register.email,
+          img_url: action.payload.register.img_url,
+        },
+        error: "",
       };
 
-    case "REGISTER_FAILURE":
+    case GOOGLE_REGISTER_SUCCESS:
       return {
         ...state,
-        registering: false,
-        isRegistered: false,
-        error: action.payload
+        user: {
+          id: action.payload.register.id,
+          username: action.payload.register.username,
+          email: action.payload.register.email,
+          img_url: action.payload.register.img_url,
+        },
       };
 
-    // logout reducer
-    case "LOGOUT_START":
+    case GET_USER:
       return {
         ...state,
-        loggingOut: true
+        user: {
+          id: action.payload?.user.id,
+          username: action.payload?.user.username,
+          email: action.payload?.user.email,
+          img_url: action.payload?.user.img_url,
+        },
       };
 
-    case "LOGOUT_SUCCESS":
+    case GET_USER_POSTS:
       return {
         ...state,
-        loggingOut: false
+        posts: action.payload?.map(post => post),
       };
 
-    case "LOGOUT_FAILURE":
+    case ADD_POST:
       return {
         ...state,
-        loggingOut: false
+        posts: [...state.posts, action.payload.addPost],
+        post_feed: [...state.post_feed, action.payload.addPost],
       };
 
-    // google login reducer
-    case "GOOGLE_LOGIN_START":
+    case DELETE_POST:
       return {
         ...state,
-        loggingIn: true,
-        error: null
+        posts: state.posts.filter(post => post.id !== action.payload),
       };
-    case "GOOGLE_LOGIN_SUCCESS":
+
+    case GET_POST_FEED:
       return {
         ...state,
-        loggingIn: true,
-        error: null
-      };
-    case "GOOGLE_LOGIN_FAILURE":
-      return {
-        ...state,
-        loggingIn: false
+        post_feed: action.payload,
       };
 
     // return default state in case the case doesn't match any of our cases

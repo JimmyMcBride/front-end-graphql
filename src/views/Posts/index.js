@@ -1,16 +1,28 @@
-import React from "react";
+import React, { useEffect } from "react";
 
-import { Wrapper, Linkton, Row, Box, Card } from "bushido-strap";
+import { Wrapper, Linkton, Flex, Box, Card } from "bushido-strap";
 
 import { useQuery } from "@apollo/react-hooks";
-import { getPostsQuery } from "./Queries/getPosts";
+import { getPostsQuery } from "./queries/getPosts";
+
+import { GET_POST_FEED } from "../../store/types";
 
 import { useHistory } from "react-router-dom";
+
+import { useDispatch, useSelector } from "react-redux";
 
 import Nav from "../../components/Nav";
 
 export default function Posts() {
   const { data, loading } = useQuery(getPostsQuery);
+
+  const { post_feed } = useSelector(state => state.auth);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch({ type: GET_POST_FEED, payload: data?.posts });
+  }, [dispatch, data]);
 
   const history = useHistory();
 
@@ -32,15 +44,15 @@ export default function Posts() {
               <h6>Loading...</h6>
             </Card>
           ) : (
-            data?.posts?.map(item => (
+            post_feed?.map(item => (
               <Card stretch key={item.id}>
-                <Row stretch ai_center>
+                <Flex stretch ai_center>
                   <Box sqr="3rem" circle>
                     <img src={item.user.img_url} alt="user profile" />
                   </Box>
                   <Box w="2rem" />
                   <strong>{item.user.username}</strong>
-                </Row>
+                </Flex>
                 <Card
                   invert
                   stretch

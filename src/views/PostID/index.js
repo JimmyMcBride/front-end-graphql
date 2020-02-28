@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { Wrapper, Linkton, Row, Box, Card } from "bushido-strap";
+import { Wrapper, Linkton, Flex, Box, Card } from "bushido-strap";
 
 import { useQuery } from "@apollo/react-hooks";
 import { getPostQuery } from "./Queries/getPost";
@@ -14,38 +14,38 @@ export default function Posts() {
 
   const { data, loading } = useQuery(getPostQuery, {
     variables: {
-      id: id
-    }
+      id: id,
+    },
   });
 
   const [user, setUser] = useState({
     id: "",
     title: "",
-    body: ""
+    body: "",
   });
 
   const [post, setPost] = useState({
     username: "",
-    img_url: ""
+    img_url: "",
   });
 
   const [comments, setComments] = useState({
     id: "",
     body: "",
     username: "",
-    img_url: ""
+    img_url: "",
   });
 
   useEffect(() => {
     setPost({
       id: data?.post?.id,
       title: data?.post?.title,
-      body: data?.post?.body
+      body: data?.post?.body,
     });
 
     setUser({
       username: data?.post?.user?.username,
-      img_url: data?.post?.user?.img_url
+      img_url: data?.post?.user?.img_url,
     });
 
     setComments(
@@ -54,7 +54,7 @@ export default function Posts() {
           id: comment?.id,
           body: comment?.body,
           username: comment?.user?.username,
-          img_url: comment?.user?.img_url
+          img_url: comment?.user?.img_url,
         };
       })
     );
@@ -83,13 +83,13 @@ export default function Posts() {
           </Card>
         ) : (
           <Card stretch key={post?.id}>
-            <Row stretch ai_center>
+            <Flex stretch ai_center>
               <Box sqr="3rem" circle>
                 <img src={user?.img_url} alt="user profile" />
               </Box>
               <Box w="2rem" />
               <strong>{user?.username}</strong>
-            </Row>
+            </Flex>
             <Card invert stretch key={post?.title}>
               <h6>{post?.title}</h6>
               <p>{post?.body}</p>
@@ -100,13 +100,13 @@ export default function Posts() {
                 {comments?.map(comment => (
                   <Card invert stretch key={comment.id}>
                     {console.log(comments)}
-                    <Row stretch ai_center>
+                    <Flex stretch ai_center>
                       <Box sqr="3rem" circle>
                         <img src={comment.img_url} alt="user profile" />
                       </Box>
                       <Box w="1rem" />
                       <b>{comment.username}</b>
-                    </Row>
+                    </Flex>
                     <Card stretch ai_start>
                       <p>{comment.body}</p>
                     </Card>

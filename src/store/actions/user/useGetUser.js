@@ -1,20 +1,29 @@
-import { getUserQuery } from "../queries/getUser";
+import { getUserQuery } from "../../queries/getUser";
 
 import { useQuery } from "@apollo/react-hooks";
+import { useDispatch } from "react-redux";
 
 export const GET_USER = "GET_USER";
 
-export const getUser = () => {
+export const useGetUser = () => {
+  const dispatch = useDispatch();
   const { loading, data, error } = useQuery(getUserQuery);
 
-  return dispatch => {
+  const userInfo = {
+    data: data,
+    loading: loading,
+    error: error,
+  };
+
+  const getUser = () => {
     dispatch({
       type: GET_USER,
       payload: {
         data,
         status: loading,
-        error: error
-      }
+        error: error,
+      },
     });
   };
+  return [userInfo, getUser];
 };

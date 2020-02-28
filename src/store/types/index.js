@@ -1,0 +1,11 @@
+export const ADD_POST = "ADD_POST";
+export const GET_USER = "GET_USER";
+export const REGISTER_SUCCESS = "REGISTER_SUCCESS";
+export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
+export const GOOGLE_REGISTER_SUCCESS = "GOOGLE_REGISTER_SUCCESS";
+export const DELETE_POST = "DELETE_POST";
+export const GET_USER_POSTS = "GET_USER_POSTS";
+export const GET_POST_FEED = "GET_POST_FEED";
+
+// export const REGISTER_SUCCESS = "REGISTER_SUCCESS";
+// export const REGISTER_SUCCESS = "REGISTER_SUCCESS";
