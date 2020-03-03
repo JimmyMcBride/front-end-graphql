@@ -39,7 +39,7 @@ export default function UserPosts({ loading, posts, dispatch }) {
                   handleDeletePost(item.id);
                   dispatch({
                     type: DELETE_POST,
-                    payload: deletePost?.posts
+                    payload: deletePost?.posts,
                   });
                 }}
               >

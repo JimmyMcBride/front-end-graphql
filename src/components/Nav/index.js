@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 
-import { Flex, Box, Button, Text } from "bushido-strap";
+import { Flex, Box, Button, Text, NavBar, theme } from "bushido-strap";
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -33,7 +33,7 @@ export default function Nav() {
     dispatch(logout());
   }
   return (
-    <Flex stretch jc_center>
+    <NavBar jc_center p="1rem" bg={theme.blackAlpha5}>
       {loading ? (
         <Text bold xlf>
           Loading...
@@ -43,15 +43,16 @@ export default function Nav() {
           <Box sqr="5rem" circle>
             <img src={img_url} alt="user profile" />
           </Box>
+          <Box w="2rem" />
           <Text bold xlf>
             Hello, {username}!
           </Text>
         </Flex>
       )}
-      <Box h="2rem" />
+      <Box w="2rem" />
       <Button h="100%" onClick={handleSignOut} red>
         Sign Out
       </Button>
-    </Flex>
+    </NavBar>
   );
 }

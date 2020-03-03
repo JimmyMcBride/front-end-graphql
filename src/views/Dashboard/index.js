@@ -39,11 +39,10 @@ export default function Dashboard() {
       id: uid,
     },
   });
-
   useEffect(() => {
     dispatch({ type: GET_USER_POSTS, payload: data?.user?.posts });
     console.log(data?.user?.posts);
-  }, [dispatch, data]);
+  }, [data, dispatch]);
 
   const handleForm = e => {
     e.preventDefault();

@@ -1,14 +1,6 @@
 import React from "react";
 
-import {
-  Wrapper,
-  Form,
-  Input,
-  Button,
-  Card,
-  Linkton,
-  Box,
-} from "bushido-strap";
+import { Form, Input, Button, Card, Box } from "bushido-strap";
 
 import { useMutation } from "@apollo/react-hooks";
 
@@ -21,7 +13,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 
 import PostResponse from "./components/PostResponse";
-import Nav from "../../../../components/Nav";
 import { ADD_POST } from "../../../../store/types";
 
 export default function Login() {
@@ -59,12 +50,14 @@ export default function Login() {
             placeholder="Title"
             onChange={handleInputChange}
           />
+          <Box h="2rem" />
           <Input
             name="body"
             type="text"
             placeholder="Type the body of your post here..."
             onChange={handleInputChange}
           />
+          <Box h="2rem" />
           <Button stretch type="submit" blue>
             Add Post!
           </Button>
@@ -72,7 +65,6 @@ export default function Login() {
             <PostResponse response={response} />
           ) : null}
         </Card>
-        {/* </Card> */}
       </Form>
     </Card>
   );
